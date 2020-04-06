@@ -1,5 +1,6 @@
 import setunaURL from './assets/setuna1.png';
 import hammerURL from './assets/hammer.png';
+import hitURL from './assets/hit.mp3';
 
 (async function () {
   const canvas = <HTMLCanvasElement>document.getElementById("game");
@@ -14,6 +15,14 @@ import hammerURL from './assets/hammer.png';
   setuna.src = setunaURL;
   const hammer = new Image();
   hammer.src = hammerURL;
+  const hit = <HTMLAudioElement>document.getElementById('hit');
+
+  context.font = '50px Georgia';
+  context.textAlign = 'center';
+  context.fillStyle = "white";
+  context.fillText('雪菜没了！就救雪菜', 500, 300);
+  context.fillText('敲击空格开始游戏', 500, 400);
+  const start = new Date().getTime();
 
   await Promise.all([
     new Promise((resolve, reject) => {
@@ -23,6 +32,13 @@ import hammerURL from './assets/hammer.png';
     new Promise((resolve, reject) => {
       hammer.onload = resolve;
       hammer.onerror = reject;
+    }),
+    new Promise((resolve, _) => {
+      window.onkeypress = (ev: KeyboardEvent) => {
+        if (ev.code == "Space") {
+          resolve();
+        }
+      }
     }),
   ]);
 
@@ -63,13 +79,22 @@ import hammerURL from './assets/hammer.png';
     }
   }
 
+  let level = 1;
   async function roundLoop() {
     while (true) {
+      let baseStep = [level * 0.01, level * 0.03];
       await sleep(Math.random()*80+100);
       posX = Math.random() * 300 + 350;
       posY = Math.random() * 200 + 150;
-      step = 0.01 + Math.random() * 0.08;
+      step = baseStep[0] + Math.random() * baseStep[1];
       await round();
+      const duration = new Date();
+      duration.setMilliseconds(new Date().getTime() - start);
+      if (score >= level * 10) {
+        alert(`关卡：${level} -> ${level + 1}\n耗时：${duration.toISOString().substr(11, 8)}`)
+        level++;
+      }
+      scoreboard.innerText = `第${level}关 总分：${score}`;
     }
   }
 
@@ -83,6 +108,7 @@ import hammerURL from './assets/hammer.png';
     const wait = (ms: number) => new Promise((resolve, reject) => {
       setTimeout(resolve, ms);
       canvas.onmouseup = (ev) => {
+        hit.play();
         beating = false;
         if (!intersect(ev.offsetX, ev.offsetY)) {
           return;
@@ -111,7 +137,6 @@ import hammerURL from './assets/hammer.png';
         await sleep(20);
       }
       progress = 0;
-      scoreboard.innerText = `总分：${score}`;
       existing = true;      
     } finally {
       existing = false;
