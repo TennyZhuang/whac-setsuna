@@ -1,4 +1,4 @@
-import setunaURL from './assets/setuna1.png';
+import setsunaURL from './assets/setsuna1.png';
 import hammerURL from './assets/hammer.png';
 import hitURL from './assets/hit.mp3';
 
@@ -20,8 +20,8 @@ function toHHMMSS(ms: number) {
   canvas.height = 600;
 
   const context = canvas.getContext('2d');
-  const setuna = new Image();
-  setuna.src = setunaURL;
+  const setsuna = new Image();
+  setsuna.src = setsunaURL;
   const hammer = new Image();
   hammer.src = hammerURL;
   const hit = <HTMLAudioElement>document.getElementById('hit');
@@ -34,8 +34,8 @@ function toHHMMSS(ms: number) {
 
   await Promise.all([
     new Promise((resolve, reject) => {
-      setuna.onload = resolve;
-      setuna.onerror = reject;
+      setsuna.onload = resolve;
+      setsuna.onerror = reject;
     }),
     new Promise((resolve, reject) => {
       hammer.onload = resolve;
@@ -75,7 +75,7 @@ function toHHMMSS(ms: number) {
   async function draw() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     if (existing) {
-      context.drawImage(setuna, 0, setuna.height*(1-progress), setuna.width, setuna.height, posX, posY+setuna.height*(1-progress), setuna.width, setuna.height);
+      context.drawImage(setsuna, 0, setsuna.height*(1-progress), setsuna.width, setsuna.height, posX, posY+setsuna.height*(1-progress), setsuna.width, setsuna.height);
     }
     if (beating) {
       context.drawImage(hammer, hammerX-50, hammerY-50, 100, 100);
@@ -108,7 +108,7 @@ function toHHMMSS(ms: number) {
   }
 
   function intersect(x: number, y: number) {
-    return posX <= x && x <= posX + setuna.width && posY <= y && y <= posY + setuna.height;
+    return posX <= x && x <= posX + setsuna.width && posY <= y && y <= posY + setsuna.height;
   }
 
   async function round() {
