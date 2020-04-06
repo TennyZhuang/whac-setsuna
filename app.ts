@@ -2,6 +2,15 @@ import setunaURL from './assets/setuna1.png';
 import hammerURL from './assets/hammer.png';
 import hitURL from './assets/hit.mp3';
 
+function toHHMMSS(ms: number) {
+  var sec_num = ms / 1000; // don't forget the second param
+  var hours   = Math.floor(sec_num / 3600);
+  var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+  var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+  return hours+':'+minutes+':'+seconds;
+};
+
 (async function () {
   const canvas = <HTMLCanvasElement>document.getElementById("game");
   const scoreboard = <HTMLDivElement>document.getElementById('score');
@@ -22,7 +31,6 @@ import hitURL from './assets/hit.mp3';
   context.fillStyle = "white";
   context.fillText('雪菜没了！就救雪菜', 500, 300);
   context.fillText('敲击空格开始游戏', 500, 400);
-  const start = new Date().getTime();
 
   await Promise.all([
     new Promise((resolve, reject) => {
@@ -41,6 +49,8 @@ import hitURL from './assets/hit.mp3';
       }
     }),
   ]);
+
+  const start = new Date().getTime();
 
   const sleep = (ms: number) => new Promise((resolve, _) => {
     setTimeout(resolve, ms);
@@ -88,10 +98,9 @@ import hitURL from './assets/hit.mp3';
       posY = Math.random() * 200 + 150;
       step = baseStep[0] + Math.random() * baseStep[1];
       await round();
-      const duration = new Date();
-      duration.setMilliseconds(new Date().getTime() - start);
+      const duration = new Date().getTime() - start;
       if (score >= level * 10) {
-        alert(`关卡：${level} -> ${level + 1}\n耗时：${duration.toISOString().substr(11, 8)}`)
+        alert(`关卡：${level} -> ${level + 1}\n耗时：${toHHMMSS(duration)}`)
         level++;
       }
       scoreboard.innerText = `第${level}关 总分：${score}`;
