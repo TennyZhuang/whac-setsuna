@@ -281,6 +281,17 @@ var setuna1_png_1 = __importDefault(require("./assets/setuna1.png"));
 
 var hammer_png_1 = __importDefault(require("./assets/hammer.png"));
 
+function toHHMMSS(ms) {
+  var sec_num = ms / 1000; // don't forget the second param
+
+  var hours = Math.floor(sec_num / 3600);
+  var minutes = Math.floor((sec_num - hours * 3600) / 60);
+  var seconds = sec_num - hours * 3600 - minutes * 60;
+  return hours + ':' + minutes + ':' + seconds;
+}
+
+;
+
 (function () {
   return __awaiter(this, void 0, void 0, function () {
     function draw() {
@@ -359,11 +370,10 @@ var hammer_png_1 = __importDefault(require("./assets/hammer.png"));
             case 2:
               _a.sent();
 
-              duration = new Date();
-              duration.setMilliseconds(new Date().getTime() - start);
+              duration = new Date().getTime() - start;
 
               if (score >= level * 10) {
-                alert("\u5173\u5361\uFF1A" + level + " -> " + (level + 1) + "\n\u8017\u65F6\uFF1A" + duration.toISOString().substr(11, 8));
+                alert("\u5173\u5361\uFF1A" + level + " -> " + (level + 1) + "\n\u8017\u65F6\uFF1A" + toHHMMSS(duration));
                 level++;
               }
 
@@ -613,7 +623,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52488" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62997" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
